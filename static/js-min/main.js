@@ -1,0 +1,1 @@
+'use strict';'ontouchstart'in window||'ontouch'in window?document.body.classList.add('touch-device'):document.body.classList.add('non-touch-device');
