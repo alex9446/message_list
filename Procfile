@@ -1,1 +1,2 @@
-web: gunicorn server:app --log-file -
+worker: pip install -r requirements-dev.txt
+web: gunicorn wsgi:app --log-file -
