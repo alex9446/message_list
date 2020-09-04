@@ -2,4 +2,3 @@
 
 flake8
 isort
-git+https://github.com/benoitc/gunicorn.git#egg=gunicorn

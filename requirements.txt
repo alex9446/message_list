@@ -1,3 +1,3 @@
-Flask
-Flask-RESTful
-Flask-SQLAlchemy
+-r requirements-min.txt
+
+git+https://github.com/benoitc/gunicorn.git#egg=gunicorn
