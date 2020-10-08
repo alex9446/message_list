@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.5.55/css/materialdesignicons.min.css">
-    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
-    {% block base_head %}{% endblock %}
-</head>
-<body>
-    {% block base_body %}{% endblock %}
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+    </body>
 </html>

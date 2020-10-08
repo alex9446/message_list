@@ -1,9 +1,14 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Icon from '@mdi/react';
+import { mdiPencil, mdiEraser, mdiFloppy, mdiPlusBox } from '@mdi/js';
+
 function Message(props) {
   return (
     <div className="message">
       <p>{props.text}</p>
-      <span className="mdi mdi-pencil" onClick={props.edit}></span>
-      <span className="mdi mdi-eraser" onClick={props.delete}></span>
+      <Icon path={mdiPencil} size={1} className="mdi mdi-pencil" onClick={props.edit} />
+      <Icon path={mdiEraser} size={1} className="mdi mdi-eraser" onClick={props.delete} />
     </div>
   );
 }
@@ -29,7 +34,7 @@ function MessagePopup(props) {
         onChange={props.store_value}
         onKeyUp={(e) => {if (e.key === 'Enter') { props.save_value(); }}}
       />
-      <span className="mdi mdi-floppy" onClick={props.save_value}></span>
+      <Icon path={mdiFloppy} size={1} className="mdi mdi-floppy" onClick={props.save_value} />
     </div>
   );
   return <Popup elem={elem} inherited={props} />;
@@ -163,7 +168,7 @@ class MessageList extends React.Component {
           {this.render_messages()}
         </div>
         <div id="add" className="message"  onClick={() => this.new_message_popup_toggle()}>
-          <span className="mdi mdi-plus-box"></span>
+          <Icon path={mdiPlusBox} size={1} className="mdi mdi-plus-box" />
         </div>
       </div>
     );

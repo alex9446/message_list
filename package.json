@@ -10,6 +10,12 @@
   },
   "author": "Alessio Margelli <alex9446@gmail.com>",
   "license": "AGPL-3.0",
+  "dependencies": {
+    "@mdi/js": "^5.6.55",
+    "@mdi/react": "^1.4.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
   "devDependencies": {
     "@babel/cli": "^7.11.6",
     "@babel/core": "^7.11.6",

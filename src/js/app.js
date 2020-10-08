@@ -1,10 +1,19 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Icon from '@mdi/react';
+import { mdiPencil, mdiEraser, mdiFloppy, mdiPlusBox } from '@mdi/js';
+
 function Message(props) {
   return /*#__PURE__*/React.createElement("div", {
     className: "message"
-  }, /*#__PURE__*/React.createElement("p", null, props.text), /*#__PURE__*/React.createElement("span", {
+  }, /*#__PURE__*/React.createElement("p", null, props.text), /*#__PURE__*/React.createElement(Icon, {
+    path: mdiPencil,
+    size: 1,
     className: "mdi mdi-pencil",
     onClick: props.edit
-  }), /*#__PURE__*/React.createElement("span", {
+  }), /*#__PURE__*/React.createElement(Icon, {
+    path: mdiEraser,
+    size: 1,
     className: "mdi mdi-eraser",
     onClick: props.delete
   }));
@@ -31,7 +40,9 @@ function MessagePopup(props) {
         props.save_value();
       }
     }
-  }), /*#__PURE__*/React.createElement("span", {
+  }), /*#__PURE__*/React.createElement(Icon, {
+    path: mdiFloppy,
+    size: 1,
     className: "mdi mdi-floppy",
     onClick: props.save_value
   }));
@@ -157,7 +168,9 @@ class MessageList extends React.Component {
       id: "add",
       className: "message",
       onClick: () => this.new_message_popup_toggle()
-    }, /*#__PURE__*/React.createElement("span", {
+    }, /*#__PURE__*/React.createElement(Icon, {
+      path: mdiPlusBox,
+      size: 1,
       className: "mdi mdi-plus-box"
     })));
   }
