@@ -3,6 +3,14 @@ import ReactDOM from 'react-dom';
 import Icon from '@mdi/react';
 import { mdiPencil, mdiEraser, mdiFloppy, mdiPlusBox } from '@mdi/js';
 
+function general_fetch(url, callback, options = {}) {
+  fetch(url, options).then(response => response.json()).then(result => callback(result)).catch(error => console.warn(error));
+}
+
+function general_fetch_with_options(url, options, callback) {
+  general_fetch(url, callback, options);
+}
+
 function Message(props) {
   return /*#__PURE__*/React.createElement("div", {
     className: "message"
@@ -80,15 +88,15 @@ class MessageList extends React.Component {
   }
 
   message_delete(id) {
-    fetch('/messages/' + id, {
+    general_fetch_with_options('/messages/' + id, {
       method: 'DELETE'
-    }).then(res => res.json()).then(result => {
+    }, result => {
       if (result.error) {
         console.warn(result.error);
       } else {
         console.debug('Message deleted!');
       }
-    }).catch(error => console.warn(error));
+    });
   }
 
   message_store_value(e) {
@@ -104,7 +112,7 @@ class MessageList extends React.Component {
   }
 
   new_message_save_value() {
-    fetch('/messages', {
+    general_fetch_with_options('/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -112,13 +120,13 @@ class MessageList extends React.Component {
       body: JSON.stringify({
         text: this.state.message_value
       })
-    }).then(res => res.json()).then(result => {
+    }, result => {
       if (result.error) {
         console.warn(result.error);
       } else {
         console.debug('Message created!');
       }
-    }).catch(error => console.warn(error));
+    });
     this.setState({
       new_message_popup: false,
       message_value: ''
@@ -126,7 +134,7 @@ class MessageList extends React.Component {
   }
 
   edit_message_save_value() {
-    fetch('/messages/' + this.state.edit_message_id, {
+    general_fetch_with_options('/messages/' + this.state.edit_message_id, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'
@@ -134,13 +142,13 @@ class MessageList extends React.Component {
       body: JSON.stringify({
         text: this.state.message_value
       })
-    }).then(res => res.json()).then(result => {
+    }, result => {
       if (result.error) {
         console.warn(result.error);
       } else {
         console.debug('Message edited!');
       }
-    }).catch(error => console.warn(error));
+    });
     this.setState({
       edit_message_popup: false,
       edit_message_id: null,
@@ -176,7 +184,7 @@ class MessageList extends React.Component {
   }
 
   fetch_messages(last_edit) {
-    fetch('/messages').then(res => res.json()).then(result => {
+    general_fetch('/messages', result => {
       if (result.error) {
         console.warn(result.error);
       } else {
@@ -185,15 +193,15 @@ class MessageList extends React.Component {
           messages: result
         });
       }
-    }).catch(error => console.warn(error));
+    });
   }
 
   fetch_last_action() {
-    fetch('/last_action_on_messages').then(res => res.json()).then(result => {
+    general_fetch('/last_action_on_messages', result => {
       if (result.value && result.value !== this.state.last_edit) {
         this.fetch_messages(result.value);
       }
-    }).catch(error => console.warn(error));
+    });
   }
 
   componentDidMount() {
