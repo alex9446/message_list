@@ -1,228 +1,80 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Icon from '@mdi/react';
-import { mdiPencil, mdiEraser, mdiFloppy, mdiPlusBox } from '@mdi/js';
+import { mdiEraser, mdiLoading, mdiPencil, mdiPlusBox } from '@mdi/js';
 
-function general_fetch(url, callback, options = {}) {
-  fetch(url, options)
-  .then(response => response.json())
-  .then(result => callback(result))
-  .catch(error => console.warn(error));
-}
+import { InputModal } from './bootstrap_modal.js';
+import { add_message, delete_message, fetch_last_action, fetch_messages } from './fetch_functions.js';
 
-function general_fetch_with_options(url, options, callback) {
-  general_fetch(url, callback, options);
-}
+import '../css/main.css';
 
 function Message(props) {
   return (
     <div className="message">
-      <p>{props.text}</p>
-      <Icon path={mdiPencil} size={1} className="mdi mdi-pencil" onClick={props.edit} />
-      <Icon path={mdiEraser} size={1} className="mdi mdi-eraser" onClick={props.delete} />
+      <p>{props.text} {props.preview && <Icon path={mdiLoading} size={1} spin />}</p>
+      <Icon className="mdi mdi-pencil" path={mdiPencil} size={1} />
+      <Icon className="mdi mdi-eraser" path={mdiEraser} size={1} onClick={props.onDelete} />
     </div>
   );
 }
 
-function Popup(props) {
+function MessageList() {
+  const [lastAction, setLastAction] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [addMessageModal, setAddMessageModal] = useState(false);
+
+  useEffect(() => {
+    fetch_messages(setMessages);
+  }, [lastAction]);
+
+  useEffect(() => {
+    fetch_last_action(lastAction, setLastAction);
+    const interval = setInterval(() => fetch_last_action(lastAction, setLastAction), 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  function handleAdd() {
+    setAddMessageModal(true);
+  }
+
+  function handleDelete(id) {
+    setMessages(messages.filter(message => message.id !== id));
+    delete_message(id);
+  }
+
+  function handleAddMessageModalClose() {
+    setAddMessageModal(false);
+  }
+
+  function handleAddMessageModalSave(text) {
+    setAddMessageModal(false);
+    setMessages(messages.slice().concat({text: text}));
+    add_message(text);
+  }
+
   return (
-    <div className="popup" onClick={props.inherited.popup_toggle}>
-      <div onClick={(e) => e.stopPropagation()}>
-        <div>
-          {props.elem}
-        </div>
+    <div>
+      {messages.map(message => {
+        return (
+          <Message
+            key={message.id}
+            text={message.text}
+            preview={message.id ? false : true}
+            onDelete={() => handleDelete(message.id)}
+          />
+        );
+      })}
+      <div id="add" className="message" onClick={handleAdd} >
+        <p>Add message</p>
+        <Icon className="mdi mdi-plus-box" path={mdiPlusBox} size={1} />
       </div>
-    </div>
-  );
-}
-
-function MessagePopup(props) {
-  const elem = (
-    <div className="new_message">
-      <input
-        type="text"
-        autoFocus
-        onChange={props.store_value}
-        onKeyUp={(e) => {if (e.key === 'Enter') { props.save_value(); }}}
+      <InputModal
+        show={addMessageModal}
+        onClose={handleAddMessageModalClose}
+        onSave={handleAddMessageModalSave}
       />
-      <Icon path={mdiFloppy} size={1} className="mdi mdi-floppy" onClick={props.save_value} />
     </div>
   );
-  return <Popup elem={elem} inherited={props} />;
-}
-
-class MessageList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state= {
-      last_edit: null,
-      messages: [],
-      new_message_popup: false,
-      edit_message_popup: false,
-      edit_message_id: null,
-      message_value: ''
-    }
-  }
-
-  render_messages() {
-    return this.state.messages.map(message => {
-      return (
-        <Message
-          key={message.id}
-          delete={() => this.message_delete(message.id)}
-          edit={() => this.setState({
-            edit_message_popup: true,
-            edit_message_id: message.id
-          })}
-          text={message.text}
-        />
-      );
-    });
-  }
-
-  message_delete(id) {
-    general_fetch_with_options(
-      '/messages/' + id,
-      { method: 'DELETE' },
-      result => {
-        if (result.error) {
-          console.warn(result.error);
-        } else {
-          console.debug('Message deleted!')
-        }
-      }
-    );
-  }
-
-  message_store_value(e) {
-    this.setState({
-      message_value: e.target.value
-    });
-  }
-
-  new_message_popup_toggle() {
-    this.setState({
-      new_message_popup: !this.state.new_message_popup
-    });
-  }
-
-  new_message_save_value() {
-    general_fetch_with_options(
-      '/messages',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text: this.state.message_value
-        })
-      },
-      result => {
-        if (result.error) {
-          console.warn(result.error);
-        } else {
-          console.debug('Message created!')
-        }
-      }
-    );
-
-    this.setState({
-      new_message_popup: false,
-      message_value: ''
-    });
-  }
-
-  edit_message_save_value() {
-    general_fetch_with_options(
-      '/messages/' + this.state.edit_message_id,
-      {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text: this.state.message_value
-        })
-      },
-      result => {
-        if (result.error) {
-          console.warn(result.error);
-        } else {
-          console.debug('Message edited!')
-        }
-      }
-    );
-
-    this.setState({
-      edit_message_popup: false,
-      edit_message_id: null,
-      message_value: ''
-    });
-  }
-
-  render() {
-    console.debug('Render MessageList');
-    return (
-      <div>
-        {this.state.new_message_popup ?
-          <MessagePopup
-            popup_toggle={() => this.new_message_popup_toggle()}
-            store_value={(e) => this.message_store_value(e)}
-            save_value={() => this.new_message_save_value()}
-          /> :
-          null}
-        {this.state.edit_message_popup ?
-          <MessagePopup
-            popup_toggle={() => this.setState({ edit_message_popup: false })}
-            store_value={(e) => this.message_store_value(e)}
-            save_value={() => this.edit_message_save_value()}
-          /> :
-          null}
-        <div id="title">
-          Message List
-        </div>
-        <div id="list">
-          {this.render_messages()}
-        </div>
-        <div id="add" className="message"  onClick={() => this.new_message_popup_toggle()}>
-          <Icon path={mdiPlusBox} size={1} className="mdi mdi-plus-box" />
-        </div>
-      </div>
-    );
-  }
-
-  fetch_messages(last_edit) {
-    general_fetch(
-      '/messages',
-      result => {
-        if (result.error) {
-          console.warn(result.error);
-        } else {
-          this.setState({
-            last_edit: last_edit,
-            messages: result
-          });
-        }
-      }
-    );
-  }
-
-  fetch_last_action() {
-    general_fetch(
-      '/last_action_on_messages',
-      result => {
-        if (result.value && (result.value !== this.state.last_edit)) {
-          this.fetch_messages(result.value);
-        }
-      }
-    );
-  }
-
-  componentDidMount() {
-    this.fetch_messages(null);
-    this.interval = setInterval(() => this.fetch_last_action(), 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
 }
 
 ReactDOM.render(

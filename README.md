@@ -1,4 +1,5 @@
 # Message List
+Main repository: https://gitlab.com/alex9446/message_list
 
 ## Short description
 A simple server-client service for saving and managing messages.
@@ -22,5 +23,7 @@ npm run build
 
 ## Usage
 ```
-usage: python server.py
+python server.py
+# or
+gunicorn wsgi:app --log-file -
 ```

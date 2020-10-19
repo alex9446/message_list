@@ -14,5 +14,13 @@ module.exports = {
     path: path.resolve(__dirname, 'static/js/bundles'),
     // `publicPath` is where Webpack will load your bundles from (optional)
     publicPath: path.resolve(__dirname, 'static/js/bundles')
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader']
+      }
+    ]
   }
 };
