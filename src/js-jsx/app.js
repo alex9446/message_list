@@ -59,8 +59,9 @@ function MessageList() {
 
   function handleAddMessageModalSave(text) {
     setAddMessageModal(false);
+    const last_message = messages.slice().pop()
     setMessages(messages.slice().concat({
-      id: messages.slice().pop().id + 1,
+      id: last_message ? last_message.id + 1 : -1,
       text: text,
       preview: true
     }));
