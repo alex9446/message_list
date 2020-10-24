@@ -27,16 +27,6 @@ export function fetch_messages(setMessages) {
   });
 }
 
-export function delete_message(id) {
-  general_fetch_with_options('/messages/' + id, { method: 'DELETE' }, result => {
-    if (result.error) {
-      console.warn(result.error);
-    } else {
-      console.debug('Message deleted!')
-    }
-  });
-}
-
 export function add_message(text) {
   general_fetch_with_options(
     '/messages',
@@ -55,4 +45,34 @@ export function add_message(text) {
       }
     }
   );
+}
+
+export function edit_message(id, text) {
+  general_fetch_with_options(
+    '/messages/' + id,
+    {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: text
+      })
+    },
+    result => {
+      if (result.error) {
+        console.warn(result.error);
+      } else {
+        console.debug('Message edited!')
+      }
+    }
+  );
+}
+
+export function delete_message(id) {
+  general_fetch_with_options('/messages/' + id, { method: 'DELETE' }, result => {
+    if (result.error) {
+      console.warn(result.error);
+    } else {
+      console.debug('Message deleted!')
+    }
+  });
 }

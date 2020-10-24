@@ -28,7 +28,7 @@ export function InputModal(props) {
 
   return /*#__PURE__*/React.createElement(BaseModal, {
     show: props.show,
-    title: "Add message",
+    title: props.title,
     onClose: props.onClose,
     onConfirm: handleSave,
     confirmText: "Save"

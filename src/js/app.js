@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Icon from '@mdi/react';
 import { mdiEraser, mdiLoading, mdiPencil, mdiPlusBox } from '@mdi/js';
 import { InputModal } from './bootstrap_modal.js';
-import { add_message, delete_message, fetch_last_action, fetch_messages } from './fetch_functions.js';
+import { add_message, delete_message, edit_message, fetch_last_action, fetch_messages } from './fetch_functions.js';
 import '../css/main.css';
 
 function Message(props) {
@@ -16,7 +16,8 @@ function Message(props) {
   })), /*#__PURE__*/React.createElement(Icon, {
     className: "mdi mdi-pencil",
     path: mdiPencil,
-    size: 1
+    size: 1,
+    onClick: props.onEdit
   }), /*#__PURE__*/React.createElement(Icon, {
     className: "mdi mdi-eraser",
     path: mdiEraser,
@@ -29,6 +30,8 @@ function MessageList() {
   const [lastAction, setLastAction] = useState(null);
   const [messages, setMessages] = useState([]);
   const [addMessageModal, setAddMessageModal] = useState(false);
+  const [editMessageModal, setEditMessageModal] = useState(false);
+  const [editMessageId, setEditMessageId] = useState(null);
   useEffect(() => {
     fetch_messages(setMessages);
   }, [lastAction]);
@@ -42,6 +45,11 @@ function MessageList() {
     setAddMessageModal(true);
   }
 
+  function handleEdit(id) {
+    setEditMessageModal(true);
+    setEditMessageId(id);
+  }
+
   function handleDelete(id) {
     setMessages(messages.filter(message => message.id !== id));
     delete_message(id);
@@ -51,19 +59,39 @@ function MessageList() {
     setAddMessageModal(false);
   }
 
+  function handleEditMessageModalClose() {
+    setEditMessageModal(false);
+  }
+
   function handleAddMessageModalSave(text) {
     setAddMessageModal(false);
     setMessages(messages.slice().concat({
-      text: text
+      id: messages.slice().pop().id + 1,
+      text: text,
+      preview: true
     }));
     add_message(text);
+  }
+
+  function handleEditMessageModalSave(text) {
+    setEditMessageModal(false);
+    setMessages(messages.map(message => {
+      if (message.id === editMessageId) {
+        message.text = text;
+        message.preview = true;
+      }
+
+      return message;
+    }));
+    edit_message(editMessageId, text);
   }
 
   return /*#__PURE__*/React.createElement("div", null, messages.map(message => {
     return /*#__PURE__*/React.createElement(Message, {
       key: message.id,
       text: message.text,
-      preview: message.id ? false : true,
+      preview: message.preview,
+      onEdit: () => handleEdit(message.id),
       onDelete: () => handleDelete(message.id)
     });
   }), /*#__PURE__*/React.createElement("div", {
@@ -76,8 +104,14 @@ function MessageList() {
     size: 1
   })), /*#__PURE__*/React.createElement(InputModal, {
     show: addMessageModal,
+    title: "Add message",
     onClose: handleAddMessageModalClose,
     onSave: handleAddMessageModalSave
+  }), /*#__PURE__*/React.createElement(InputModal, {
+    show: editMessageModal,
+    title: "Edit message",
+    onClose: handleEditMessageModalClose,
+    onSave: handleEditMessageModalSave
   }));
 }
 

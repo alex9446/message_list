@@ -38,7 +38,7 @@ export function InputModal(props) {
   return (
     <BaseModal
       show={props.show}
-      title="Add message"
+      title={props.title}
       onClose={props.onClose}
       onConfirm={handleSave}
       confirmText="Save"
