@@ -1,15 +1,14 @@
-import os
 from datetime import datetime
 
 from flask import Flask, render_template
 from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
 
-DB_NAME = 'db.sqlite'
+from parameters import get_parameter
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DB_NAME
+app.config['SQLALCHEMY_DATABASE_URI'] = get_parameter('database_url')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Suppress logged warning
 db = SQLAlchemy(app)
 
@@ -22,8 +21,7 @@ def dt_as_rfc3339(dt: datetime) -> str:
 
 
 def init_db() -> None:
-    if not os.path.exists(DB_NAME):
-        db.create_all()
+    db.create_all()
 
 
 # Return dict with error as a key
@@ -169,4 +167,4 @@ api.add_resource(Messages, '/messages', '/messages/<int:id>')
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True, port=8080)
+    app.run(debug=True, port=int(get_parameter('port')))
