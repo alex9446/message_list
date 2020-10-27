@@ -44,3 +44,26 @@ body {
 .mdi-plus-box {
   color: darkgreen;
 }
+
+/* Only for non-touch devices */
+.mdi-pencil, .mdi-eraser, #add {
+  cursor: pointer;
+}
+
+.non-touch-device .mdi-pencil,
+.non-touch-device .mdi-eraser,
+.non-touch-device .mdi-plus-box {
+  color: initial;
+}
+
+.mdi-pencil:hover {
+  color: brown;
+}
+
+.mdi-eraser:hover {
+  color: red;
+}
+
+.mdi-plus-box:hover {
+  color: darkgreen;
+}
