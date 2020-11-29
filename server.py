@@ -125,7 +125,9 @@ class Messages(Resource):
             if message:
                 return message.to_dict(), 200
             return not_found_error('Message not found!')
-        return [message.to_dict() for message in Message.query.all()], 200
+        # Returns all messages sorted by creation date
+        all_messages = Message.query.order_by(Message.created.asc()).all()
+        return [message.to_dict() for message in all_messages], 200
 
     # Create a new message and return it
     def post(self, id: int = None):
