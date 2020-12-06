@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Icon from '@mdi/react';
 import { mdiEraser, mdiLoading, mdiPencil, mdiPlusBox } from '@mdi/js';
 import { InputModal } from './bootstrap_modal.js';
+import { ErrorToast } from './bootstrap_toast.js';
 import { add_message, delete_message, edit_message, fetch_last_action, fetch_messages } from './fetch_functions.js';
 import '../css/main.css';
 
@@ -32,6 +33,7 @@ function MessageList() {
   const [addMessageModal, setAddMessageModal] = useState(false);
   const [editMessageModal, setEditMessageModal] = useState(false);
   const [editMessageId, setEditMessageId] = useState(null);
+  const [errors, setErrors] = useState([]);
   useEffect(() => {
     fetch_messages(setMessages);
   }, [lastAction]);
@@ -52,7 +54,7 @@ function MessageList() {
 
   function handleDelete(id) {
     setMessages(messages.filter(message => message.id !== id));
-    delete_message(id);
+    delete_message(id, addError);
   }
 
   function handleAddMessageModalClose() {
@@ -71,7 +73,7 @@ function MessageList() {
       text: text,
       preview: true
     }));
-    add_message(text);
+    add_message(text, addError);
   }
 
   function handleEditMessageModalSave(text) {
@@ -84,10 +86,27 @@ function MessageList() {
 
       return message;
     }));
-    edit_message(editMessageId, text);
+    edit_message(editMessageId, text, addError);
   }
 
-  return /*#__PURE__*/React.createElement("div", null, messages.map(message => {
+  function addError(text) {
+    setErrors(errors.slice().concat({
+      text: text,
+      show: true
+    }));
+  }
+
+  function handleClose(i) {
+    setErrors(errors.map((error, index) => {
+      if (index === i) {
+        error.show = false;
+      }
+
+      return error;
+    }));
+  }
+
+  return /*#__PURE__*/React.createElement(React.Fragment, null, messages.map(message => {
     return /*#__PURE__*/React.createElement(Message, {
       key: message.id,
       text: message.text,
@@ -103,6 +122,15 @@ function MessageList() {
     className: "mdi mdi-plus-box",
     path: mdiPlusBox,
     size: 1
+  })), /*#__PURE__*/React.createElement("div", {
+    id: "error-area"
+  }, errors.map((error, index) => {
+    return /*#__PURE__*/React.createElement(ErrorToast, {
+      key: index,
+      text: error.text,
+      show: error.show,
+      onClose: () => handleClose(index)
+    });
   })), /*#__PURE__*/React.createElement(InputModal, {
     show: addMessageModal,
     title: "Add message",
