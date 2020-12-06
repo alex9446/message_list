@@ -1,12 +1,18 @@
-function general_fetch(url, callback, options = {}) {
+function general_fetch(url, callback, onError = null, options = {}) {
   fetch(url, options)
   .then(response => response.json())
   .then(result => callback(result))
-  .catch(error => console.warn(error));
+  .catch(error => {
+    if (onError) {
+      onError(error);
+    } else {
+      console.warn(error);
+    }
+  });
 }
 
-function general_fetch_with_options(url, options, callback) {
-  general_fetch(url, callback, options);
+function general_fetch_with_options(url, options, callback, onError = null) {
+  general_fetch(url, callback, onError, options);
 }
 
 export function fetch_last_action(lastAction, setLastAction) {
@@ -27,7 +33,11 @@ export function fetch_messages(setMessages) {
   });
 }
 
-export function add_message(text) {
+export function add_message(text, addError) {
+  function handleError(error) {
+    console.error(error);
+    addError('Message not added');
+  }
   general_fetch_with_options(
     '/messages',
     {
@@ -39,15 +49,20 @@ export function add_message(text) {
     },
     result => {
       if (result.error) {
-        console.warn(result.error);
+        handleError(result.error);
       } else {
         console.debug('Message created!')
       }
-    }
+    },
+    handleError
   );
 }
 
-export function edit_message(id, text) {
+export function edit_message(id, text, addError) {
+  function handleError(error) {
+    console.error(error);
+    addError('Message not edited');
+  }
   general_fetch_with_options(
     '/messages/' + id,
     {
@@ -59,20 +74,32 @@ export function edit_message(id, text) {
     },
     result => {
       if (result.error) {
-        console.warn(result.error);
+        handleError(result.error);
       } else {
         console.debug('Message edited!')
       }
-    }
+    },
+    handleError
   );
 }
 
-export function delete_message(id) {
-  general_fetch_with_options('/messages/' + id, { method: 'DELETE' }, result => {
-    if (result.error) {
-      console.warn(result.error);
-    } else {
-      console.debug('Message deleted!')
-    }
-  });
+export function delete_message(id, addError) {
+  function handleError(error) {
+    console.error(error);
+    addError('Message not deleted');
+  }
+  general_fetch_with_options(
+    '/messages/' + id,
+    {
+      method: 'DELETE'
+    },
+    result => {
+      if (result.error) {
+        handleError(result.error);
+      } else {
+        console.debug('Message deleted!')
+      }
+    },
+    handleError
+  );
 }
