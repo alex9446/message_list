@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Icon from '@mdi/react';
-import { mdiEraser, mdiLoading, mdiPencil, mdiPlusBox } from '@mdi/js';
+import { mdiEraser, mdiPencil, mdiPlusBox } from '@mdi/js';
 
 import { InputModal } from './bootstrap_modal.js';
 import { ErrorToast } from './bootstrap_toast.js';
@@ -12,7 +12,9 @@ import '../css/main.css';
 function Message(props) {
   return (
     <div className="message">
-      <p>{props.text} {props.preview && <Icon path={mdiLoading} size={1} spin />}</p>
+      <p className={props.preview ? 'blink-animation' : ''}>
+        {props.text}
+      </p>
       <Icon className="mdi mdi-pencil" path={mdiPencil} size={1} onClick={props.onEdit} />
       <Icon className="mdi mdi-eraser" path={mdiEraser} size={1} onClick={props.onDelete} />
     </div>
