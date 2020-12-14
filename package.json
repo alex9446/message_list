@@ -2,8 +2,8 @@
   "name": "message_list",
   "private": "true",
   "scripts": {
-    "babel-jsx": "npx babel src/js-jsx --out-dir src/js",
-    "babel-jsx-watch": "npx babel src/js-jsx --out-dir src/js --watch",
+    "babel-jsx": "npx babel src/js/jsx --out-dir src/js",
+    "babel-jsx-watch": "npx babel src/js/jsx --out-dir src/js --watch",
     "webpack": "npx webpack",
     "webpack-watch": "npx webpack --watch",
     "build": "npm run babel-jsx && npm run webpack"
