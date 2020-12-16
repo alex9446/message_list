@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Button, FormControl, Modal } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 export function BaseModal(props) {
   return /*#__PURE__*/React.createElement(Modal, {
     show: props.show,

@@ -5,7 +5,6 @@ import { mdiEraser, mdiPencil, mdiPlusBox } from '@mdi/js';
 import { InputModal } from './bootstrap_modal.js';
 import { ErrorToast } from './bootstrap_toast.js';
 import { add_message, delete_message, edit_message, fetch_last_action, fetch_messages } from './fetch_functions.js';
-import '../css/main.css';
 
 function Message(props) {
   return /*#__PURE__*/React.createElement("div", {
