@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Icon from '@mdi/react';
-import { mdiEraser, mdiLoading, mdiPencil, mdiPlusBox } from '@mdi/js';
+import { mdiEraser, mdiPencil, mdiPlusBox } from '@mdi/js';
 import { InputModal } from './bootstrap_modal.js';
 import { ErrorToast } from './bootstrap_toast.js';
 import { add_message, delete_message, edit_message, fetch_last_action, fetch_messages } from './fetch_functions.js';
@@ -10,11 +10,9 @@ import '../css/main.css';
 function Message(props) {
   return /*#__PURE__*/React.createElement("div", {
     className: "message"
-  }, /*#__PURE__*/React.createElement("p", null, props.text, " ", props.preview && /*#__PURE__*/React.createElement(Icon, {
-    path: mdiLoading,
-    size: 1,
-    spin: true
-  })), /*#__PURE__*/React.createElement(Icon, {
+  }, /*#__PURE__*/React.createElement("p", {
+    className: props.preview ? 'blink-animation' : ''
+  }, props.text), /*#__PURE__*/React.createElement(Icon, {
     className: "mdi mdi-pencil",
     path: mdiPencil,
     size: 1,
