@@ -4,7 +4,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 module.exports = {
   mode: 'development',
   entry: {
-    app: './src/js/app.js',
+    app: './build/js/app.js',
   },
   output: {
     // `filename` provides a template for naming your bundles (remember to use `[name]`)

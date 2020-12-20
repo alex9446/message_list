@@ -2,11 +2,13 @@
   "name": "message_list",
   "private": "true",
   "scripts": {
-    "babel-jsx": "npx babel src/js/jsx --out-dir src/js",
-    "babel-jsx-watch": "npx babel src/js/jsx --out-dir src/js --watch",
+    "babel-jsx": "npx babel src/js/*.jsx --out-dir build/js/",
+    "babel-jsx-watch": "npx babel src/js/*.jsx --out-dir build/js/ --watch",
+    "copy-plain-js": "cp src/js/*.js build/js/",
     "webpack": "npx webpack",
     "webpack-watch": "npx webpack --watch",
-    "build": "npm run babel-jsx && npm run webpack"
+    "copy-bootstrap": "cp node_modules/bootstrap/dist/css/bootstrap.css static/css/",
+    "build": "npm run babel-jsx && npm run copy-plain-js && npm run webpack && npm run copy-bootstrap"
   },
   "author": "Alessio Margelli <alex9446@gmail.com>",
   "license": "AGPL-3.0",
