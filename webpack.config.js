@@ -4,7 +4,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 module.exports = {
   mode: 'production',
   entry: {
-    app: './src/js/app.js',
+    app: './build/js/app.js',
   },
   output: {
     // `filename` provides a template for naming your bundles (remember to use `[name]`)
@@ -15,14 +15,6 @@ module.exports = {
     path: path.resolve(__dirname, 'static/js/bundles'),
     // `publicPath` is where Webpack will load your bundles from (optional)
     publicPath: path.resolve(__dirname, 'static/js/bundles')
-  },
-  module: {
-    rules: [
-      {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader']
-      }
-    ]
   },
   plugins: [
     new BundleAnalyzerPlugin({openAnalyzer: false})
