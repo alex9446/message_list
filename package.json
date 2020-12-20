@@ -5,10 +5,12 @@
     "babel-jsx": "npx babel src/js/*.jsx --out-dir build/js/",
     "babel-jsx-watch": "npx babel src/js/*.jsx --out-dir build/js/ --watch",
     "copy-plain-js": "cp src/js/*.js build/js/",
+    "copy-bootstrap": "cp node_modules/bootstrap/dist/css/bootstrap.css static/css/",
+    "bootstrap-wo-source": "sed -i '/^\\/\\*\\#\\ sourceMappingURL/d' static/css/bootstrap.css",
+    "build-bootstrap": "npm run copy-bootstrap && npm run bootstrap-wo-source",
     "webpack": "npx webpack",
     "webpack-watch": "npx webpack --watch",
-    "copy-bootstrap": "cp node_modules/bootstrap/dist/css/bootstrap.css static/css/",
-    "build": "npm run babel-jsx && npm run copy-plain-js && npm run webpack && npm run copy-bootstrap"
+    "build": "npm run babel-jsx && npm run copy-plain-js && npm run build-bootstrap && npm run webpack"
   },
   "author": "Alessio Margelli <alex9446@gmail.com>",
   "license": "AGPL-3.0",
