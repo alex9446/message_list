@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from flask import Flask, render_template
+from flask_cors import CORS
 from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
 
@@ -162,6 +163,14 @@ class Messages(Resource):
         return self.patch_or_delete(id=id, delete=True)
 
 
+# Declaration of the allowed cors requests
+allowed_cors = get_parameter('allowed_cors')
+if allowed_cors:
+    CORS(app, resources={
+        r'^\/(last_action_on_messages|messages(\/\d+)?)$': {
+            'origins': allowed_cors
+        }
+    })
 # Declaration of the REST endpoints
 api.add_resource(LastActionOnMessages, '/last_action_on_messages')
 api.add_resource(Messages, '/messages', '/messages/<int:id>')
