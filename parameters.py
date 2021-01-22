@@ -9,6 +9,11 @@ from sys import argv
 # ]
 
 PARAMETERS = {
+    'allowed_cors': [
+        ['--allowed-cors'],
+        ['ALLOWED_CORS', 'ML_CORS'],
+        ''
+    ],
     'database_url': [
         ['--database-url'],
         ['DATABASE_URL', 'ML_DB_URL'],
