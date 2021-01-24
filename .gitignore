@@ -1,8 +1,5 @@
 __pycache__/
-build/
-node_modules/
 venv/
 
 db.sqlite
 message_list.drawio
-package-lock.json

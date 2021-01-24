@@ -23,6 +23,11 @@ PARAMETERS = {
         ['--port'],
         ['PORT', 'ML_PORT'],
         '8080'
+    ],
+    'redirect_url': [
+        ['--redirect-url'],
+        ['REDIRECT_URL'],
+        ''
     ]
 }
 

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Flask, render_template
+from flask import Flask, redirect
 from flask_cors import CORS
 from flask_restful import Api, Resource, reqparse
 from flask_sqlalchemy import SQLAlchemy
@@ -42,7 +42,7 @@ def bad_request_error(message: str) -> tuple:
 
 @app.route('/')
 def index() -> tuple:
-    return render_template('index.html'), 200
+    return redirect(get_parameter('redirect_url'), code=301)
 
 
 # Return error 404 as JSON
