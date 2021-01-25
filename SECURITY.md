@@ -1,10 +1,8 @@
 # Security Policy
 
-## Supported Versions
+Before reporting a vulnerability, check if the fix is already in the **dev** branch or in a pull request.
 
-Currently only the dev branch is supported.
-
-## Reporting a Vulnerability
+## Reporting a vulnerability
 
 Send me an email, the address is in the profile.
 
